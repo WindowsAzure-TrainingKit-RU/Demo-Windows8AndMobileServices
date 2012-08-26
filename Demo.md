@@ -29,6 +29,8 @@ In order to execute this demo you need to set up your environment.
 
 1. Download and Install the Windows Azure Mobile Services SDK
 
+1. **Code Snippets** have been provided that you can add for use in Visual Studio 2012. You can find them in  /Source/ClientSnippets
+
 <a name="Demo 1: Creating your first Mobile Service" />
 ## Demo 1: Creating your first Mobile Service ##
 
@@ -178,6 +180,8 @@ In demo, you add push notifications, using the Windows Push Notification service
 	}
 
 	````
+	> **Note:** You can install and use the code snippet _wamschannelclass_ located in /Source/ClientSnippets to perform this task
+
 1. add the following using statement:
 
 	````C#
@@ -196,6 +200,8 @@ In demo, you add push notifications, using the Windows Push Notification service
 	var ch = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
 	await MobileService.GetTable<Channel>().InsertAsync(new Channel() { Uri = ch.Uri });
 	````
+
+	> **Note:** You can install and use the code snippet _wamschannelrequest_ located in /Source/ClientSnippets to perform this task
 
 Now that we have the client wired up to request a channel and write it to our Mobile Service we now need to add a Channel table to our Mobile Service and add a server side script to send push notifications.
 
@@ -359,6 +365,8 @@ private async System.Threading.Tasks.Task Authenticate()
 		}
 }
 	````
+	> **Note:** You can install and use the code snippet _wamsauthenticate_ located in /Source/ClientSnippets to perform this task
+
 
 1. Update string _<< INSERT REDIRECT DOMAIN HERE >>_ from the previous step with the redirect domain that was specified when setting up the app in Live Connect, in the format **https://****service-name****.azure-mobile.net/**.
 
