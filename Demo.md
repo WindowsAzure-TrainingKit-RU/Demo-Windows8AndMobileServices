@@ -6,7 +6,7 @@
 ## Overview ##
 This demo script demonstrates how you can leverage Visual Studio 2012 and Windows Azure Mobile Services to add structured storage, push notifications and integrated authentication to your Windows Store application.
 
-> **Note:** This is a demo script that can be used as a guide for demos when presenting on Windows Azure Mobile Serivces.  If you are looking for a Hands on Lab with step by step screenshots please refer to the HOL section of the Windows Azure Training Kit.
+> **Note:** This is a demo script that can be used as a guide for demos when presenting on Windows Azure Mobile Services.  If you are looking for a Hands on Lab with step by step screenshots please refer to the HOL section of the Windows Azure Training Kit.
 
 <a name="technologies" />
 ### Key Technologies ###
@@ -44,7 +44,7 @@ Follow these steps to create a new mobile service.
 
 1. On the **Create a Mobile Service** dialog provide a unique subdomain in the **URL** field.  Once verification that the subdomain is unique proceed with the next steps.
 
-1. Select either to use an existing database or new database and region. **Speaking Point:**If you select an existing database Windows Azure Mobile Services will separate multiple Mobile Service tenants by schema. 
+1. Select either to use an existing database or new database and region. **Speaking Point:** If you select an existing database Windows Azure Mobile Services will separate multiple Mobile Service tenants by schema. 
 
 1. Complete the remainder of the database settings in the Create Mobile Service wizard
 
@@ -211,8 +211,6 @@ In this section we add a Channel table and server side scripts to send push noti
 1. Click **+ Create** in the bottom toolbar
 
 1. In **Table name** type _Channel_, then click the check button.
-	
-	**Speaking Point:** _Channel_ is case sensitive.
 
 1. Click the new **Channel** table and verify that there are no data rows.
 
@@ -225,30 +223,24 @@ This is the minimum requirement for a table in Mobile Services.
 
 1. Replace the existing script with the following script.  
 
-	**Speaking Point:** The purpose of this script is to ensure that multiple channels with the same Uri are not submitted every time the OnLaunched handler executes in the sample application
+	**Speaking Point:** The purpose of this script is to ensure that multiple channels with the same Uri are not submitted every time the OnLaunched handler executes in the sample application. This code is sufficient for a demo scenario but in a real application you would use an Id rather then matching on uri: item.Uri to identify the channel to be replaced.  The reasoning is Channels expire and will be replaced by a new unique Channel Uri.
 
-		
-````JavaScript
-		function insert(item, user, request) { 
-		 	var channelTable = tables.getTable('Channel'); 
-		 	channelTable.where({ uri: item.Uri }) 
-			  	.read({ success: insertChannelIfNotFound});     
-	
-		 	function insertChannelIfNotFound(existingChannels) { 
-			  	if(existingChannels.length > 0) { 
-						request.respond(200, existingChannels[0]); 
-			  	} else { 
-						request.execute(); 
-			  	} 
-		 	} 
-		}
-````
+	````JavaScript
+	function insert(item, user, request) { 
+		var channelTable = tables.getTable('Channel'); 
+		channelTable.where({ uri: item.Uri }) 
+			.read({ success: insertChannelIfNotFound});     
 
-	**Speaking Point:** This code is sufficient for a demo scenario but in a real application you would use an Id rather then matching on uri: item.Uri to identify the channel to be replaced.  The reasoning is Channels expire and will be replaced by a new unique Channel Uri.
- 
-1. Click **Save** in the bottom toolbar
-
-1. Now in the left navbar select the **TodoItem** table
+		function insertChannelIfNotFound(existingChannels) { 
+			if(existingChannels.length > 0) { 
+					request.respond(200, existingChannels[0]); 
+			} else { 
+					request.execute(); 
+			} 
+		} 
+	}
+	````
+1. Click **Save** in the bottom toolbar Now in the left navbar select the **TodoItem** table 
 
 1. Click the **Script** tab and select the **Insert** Operation and replace the existing script with the following and walk through the following code
 
@@ -265,29 +257,28 @@ This is the minimum requirement for a table in Mobile Services.
 		 });
 	}
 
-	function sendNotifications(item){               
-		 
-			  var channelTable = tables.getTable('Channel'); 
-			  channelTable.read({ 
-				 success: function(channels){
-					 channels.forEach(function(channel){  
-											
-						 push.wns.sendToastText04(channel.Uri, {
-							  text1: item.text,
-							  text2: "text line 2",
-							  text3:  "text line 3"
-						 }, {
-							  success: function(response){                                               
-								  console.log(response);
-							  },                                   
-							  error: function(err){                                               
-									console.error(err);                       
-							  }                    
-						 });
-					});
-			  }        
-		 });    
-	}
+	function sendNotifications(item){               		 
+	  var channelTable = tables.getTable('Channel'); 
+	  channelTable.read({ 
+		 success: function(channels){
+			 channels.forEach(function(channel){  
+									
+				 push.wns.sendToastText04(channel.Uri, {
+					  text1: item.text,
+					  text2: "text line 2",
+					  text3:  "text line 3"
+				 }, {
+					  success: function(response){                                               
+						  console.log(response);
+					  },                                   
+					  error: function(err){                                               
+							console.error(err);                       
+					  }                    
+				 });
+			});
+	  }        
+ });    
+}
 	````
 **Speaking Point:** This script executes as a each time a the insert operation is executed on the Todoitem table.  The sendNotifications method we select all channels from the Channels table and iterate through them sending a push notification to each channel uri.  While we have only demonstrated toast the push.wns.* namespace provides simple to use methods required for sending toast, tile and badge updates. As you can see in this scenario we are sending a ToastText04 template which requires three lines of text.  When you build your applications we would advise that you do not send toast notifications so frequently but rather only at times when there is a critical or important message to deliver the user of your application.
 
@@ -296,7 +287,7 @@ Next we will move on to look at how you can secure your Mobile Service endpoints
 <a name="Demo 3: Adding Auth to Your App and Services" />
 ## Demo 3: Adding Auth to Your App and Services ##
 
-This demo shows you how to authenticate users in Windows Azure Mobile Services from a Windows 8 app. In this demo, you add authentication to the quickstart project using Live Connect. When successfully authenticated by Live Connect, a logged-in user is welcomed by name and the user ID value is displayed.
+This demo shows you how to authenticate users in Windows Azure Mobile Services from a Windows 8 app. In this demo, you add authentication to the quickstart project using Live Connect. When successfully authenticated by Live Connect, a logged-in the application will be able to consume your Mobile Service.
 
 <a name="Register-your-app" />
 ### Register your app ###
@@ -326,9 +317,7 @@ To be able to authenticate users, you must register your Windows 8 app at the Li
 
 1. Click the **Permissions** tab, set all permissions to **Only authenticated users**, and then click **Save**. This will ensure that all operations against the **TodoItem** table require an authenticated user. This also simplifies the scripts in the next tutorial because they will not have to allow for the possibility of anonymous users
 
-1. **In Visual Studio 2012 Express for Windows 8, open the project that you created when you completed the tutorial Get started with Mobile Services <../get-started/>.**
-
-1. Press the F5 key to run this quickstart-based app; verify that an exception with a status code of 401 (Unauthorized) is raised.
+1. Return to Visual Studio 2012 aand press the **F5** key to run this quickstart-based app; verify that an exception with a status code of 401 (Unauthorized) is raised.
 This happens because the app is accessing Mobile Services as an unauthenticated user, but the _TodoItem_ table now requires authentication.
 
 Next, you will update the app to authenticate users with Live Connect before requesting resources from the mobile service.
@@ -349,30 +338,28 @@ Next, you will update the app to authenticate users with Live Connect before req
 1. Add the following code snippet that creates a member variable for storing the current Live Connect session and a method to handle the authentication process:
 
 
-````C#
+	````C#
 private LiveConnectSession session;
-        			private async System.Threading.Tasks.Task Authenticate()
-        			{
-            			LiveAuthClient liveIdClient = new LiveAuthClient("<<TODO Redirect URL here>>");
+private async System.Threading.Tasks.Task Authenticate()
+{
+		LiveAuthClient liveIdClient = new LiveAuthClient("<<TODO Redirect URL here>>");
 
-            			while (session == null)
-            			{
-                			// Force a logout to make it easier to test with multiple Microsoft Accounts 
-                			if (liveIdClient.CanLogout)
-                    			liveIdClient.Logout();
+		while (session == null)
+		{
+			// Force a logout to make it easier to test with multiple Microsoft Accounts 
+			if (liveIdClient.CanLogout)
+				liveIdClient.Logout();
 
-                			LiveLoginResult result = await liveIdClient.LoginAsync(new[] { "wl.basic" });
-                			if (result.Status == LiveConnectSessionStatus.Connected)
-                			{
-                    			session = result.Session;
-                    			MobileServiceUser loginResult = await App.MobileService.LoginAsync(session.AuthenticationToken);
-                			}               
-            			}
-        			}
-````
+			LiveLoginResult result = await liveIdClient.LoginAsync(new[] { "wl.basic" });
+			if (result.Status == LiveConnectSessionStatus.Connected)
+			{
+				session = result.Session;
+				MobileServiceUser loginResult = await App.MobileService.LoginAsync(session.AuthenticationToken);
+			}               
+		}
+}
+	````
 
-
-	
 1. Update string _<< INSERT REDIRECT DOMAIN HERE >>_ from the previous step with the redirect domain that was specified when setting up the app in Live Connect, in the format **https://****service-name****.azure-mobile.net/**.
 
 1. Update the **OnNavigatedTo** event handler to be async and add a call to the **Authenticate** method:
