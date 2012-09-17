@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Demo xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/ContentFramework.Core.Models">
-	<Id>Demo-Windows8AndMobileServices</Id>
+	<Id>Windows8AndMobileServices</Id>
 	<Author>
 		<Name>Nick Harris</Name>
 		<Blog>http://www.nickharris.net</Blog>
@@ -11,8 +11,8 @@
 	<Title>Getting Started with Windows Azure Mobile Services</Title>
 	<Version>1.0.0</Version>
 	<Source>.\Source</Source>
-	<!-- <CustomProperties>    
+	<DependencyChecker></DependencyChecker>
+	<CustomProperties>    
 		<Property Name="GitHubRepository" Value="https://github.com/WindowsAzure-TrainingKit/Demo-Windows8AndMobileServices" />
-		</CustomProperties>  
-	-->
+	</CustomProperties>	
 </Demo>
