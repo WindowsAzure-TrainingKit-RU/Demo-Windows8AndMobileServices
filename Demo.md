@@ -58,7 +58,7 @@ Once you have created your mobile service, you can follow an easy quick start in
 
 1. After the status updates to **Ready** for your mobile service in the **Mobile Services** tab of the Management portal. Click on your mobile service name to navigate into the service.
 
-1. Click on ![Image 16](images/image-16.png?raw=true) to see the Mobile Services quick start page.
+1. Click on ![Image 16](Images/image-16.png?raw=true) to see the Mobile Services quick start page.
 
 1. Select **Create a new Windows 8 application** and perform the three steps provided
 	- For the **Get the tools** step Install the Mobile Services SDK if you have not done so already.  The Mobile Services SDK provides a client side API that can be used within your Visual C++, XAML/C#/VB and HTML/JS Windows Store apps.
