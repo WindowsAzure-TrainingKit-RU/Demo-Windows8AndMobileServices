@@ -1,5 +1,5 @@
 ﻿<a name="title" />
-# Demo Script: Building Windows Store Applications with Windows Azure Mobile Services #
+# Getting Started with Windows Azure Mobile Services #
 
 ---
 <a name="Overview" />
