@@ -294,15 +294,22 @@ This demo shows you how to authenticate users in Windows Azure Mobile Services f
 <a name="Register-your-app" />
 ### Register your app ###
 
-To be able to authenticate users, you must register your Windows 8 app at the Live Connect Developer Center. You must then register the client secret to integrate Live Connect with Mobile Services.
+To be able to authenticate users, you must register your Windows 8 app at the Live Connect Developer Center. You must then register the client secret to integrate Microsoft Account with Mobile Services.
 
 1. Navigate to the [Windows Push Notifications & Live Connect](http://go.microsoft.com/fwlink/?LinkID=257677&clcid=0x409) page, log on with your Microsoft account if needed, and then follow the instructions to register your app.
+
+> **Note:** In this example we will use Microsoft Account.  If you wish to demonstrat Choose a supported identity provider from the list below and follow the steps to register your app with that provider:
+[Microsoft Account](http://www.windowsazure.com/en-us/develop/mobile/how-to-guides/register-for-microsoft-authentication/),
+[Facebook login](http://www.windowsazure.com/en-us/develop/mobile/how-to-guides/register-for-facebook-authentication/), 
+[Twitter login](http://www.windowsazure.com/en-us/develop/mobile/how-to-guides/register-for-twitter-authentication/),
+[Google login](http://www.windowsazure.com/en-us/develop/mobile/how-to-guides/register-for-google-authentication/)
+
 
 1. To enable auth you must now Navigate to the [My Apps dashboard](http://go.microsoft.com/fwlink/?LinkId=262039&clcid=0x409) in Live Connect Developer Center and click on your app in the **My applications** list.
 
 	**Note:**  This step is easier to demo if you leave the Live Connect portal open after doing the Push Notification demo script above
 
-1. Click **Edit settings**, then **API Settings** and make a note of the value of **Client secret**.
+1. Click **Edit settings**, then **API Settings** and make a note of the value of **Client ID** and **Client secret**.
  
 	You must provide this value to Mobile Services to be able to use Live Connect for authentication.
 
@@ -317,35 +324,15 @@ To be able to authenticate users, you must register your Windows 8 app at the Li
 
 1. In the Management Portal, click the **Data** tab, and then click the **TodoItem** table.
 
-1. Click the **Permissions** tab, set all permissions to **Only authenticated users**, and then click **Save**. This will ensure that all operations against the **TodoItem** table require an authenticated user. This also simplifies the scripts in the next tutorial because they will not have to allow for the possibility of anonymous users
+1. Click the **Permissions** tab, set all permissions to **Only authenticated users**, and then click **Save**. This will ensure that all operations against the **TodoItem** table require an authenticated user.
 
 1. Return to Visual Studio 2012 aand press the **F5** key to run this quickstart-based app; verify that an exception with a status code of 401 (Unauthorized) is raised.
 This happens because the app is accessing Mobile Services as an unauthenticated user, but the _TodoItem_ table now requires authentication.
 
-Next, you will update the app to authenticate users with Live Connect before requesting resources from the mobile service.
+Next, you will update the app to authenticate users with a Microsoft Account before requesting resources from the mobile service.
 
 <a name="Add-authentication" />
-### Add authentication ###
-
-1. Navigate to the Identity Tab and select which identity provider you would like to use.
-
-> **Note:** In this example we will use Microsoft Account.  If you wish to demonstrat Choose a supported identity provider from the list below and follow the steps to register your app with that provider:
-[Microsoft Account](http://www.windowsazure.com/en-us/develop/mobile/how-to-guides/register-for-microsoft-authentication/),
-[Facebook login](http://www.windowsazure.com/en-us/develop/mobile/how-to-guides/register-for-facebook-authentication/), 
-[Twitter login](http://www.windowsazure.com/en-us/develop/mobile/how-to-guides/register-for-twitter-authentication/),
-[Google login](http://www.windowsazure.com/en-us/develop/mobile/how-to-guides/register-for-google-authentication/)
-
-1. Navigate to the [My Applications](http://go.microsoft.com/fwlink/p/?LinkId=262039&clcid=0x409) page in the Live Connect Developer Center, and log on with your Microsoft account, if required.
-
-1. Click **Create application**, then type an **Application name** and click **I accept**. This registers the application with Live Connect.
-
-1. Click A**pplication settings page**, then **API Settings** and make a note of the values of the **Client ID** and **Client secret**.
-
-1. In **Redirect domain**, enter the URL of your mobile service, and then click Save.
-
-> **Note:** You are now ready to use a Microsoft Account for authentication in your app by providing the client ID and client secret values to Mobile Services.
-
-1. Back in the Management Portal, click the **Identity** tab, enter the app identifier and shared secret values obtained from your identity provider, and click **Save**.
+### Add authentication to your app###
 
 1. Now that your Authentication provider is now configured lets wire up the application. Return to Visual Studio and select **MainPage.xaml.cs**
 
@@ -364,4 +351,4 @@ protected override async void OnNavigatedTo(NavigationEventArgs e)
 
 1. Press the F5 key to run the app and sign into the app with your chosen identity provider.
 
-> **Note:** When you are successfully logged-in, the app should run without errors, and you should be able to query Mobile Services and make updates to data.
+> **Note:** When you are successfully logged-in, the app will run without errors, and you will be able to query Mobile Services and make updates to data.
