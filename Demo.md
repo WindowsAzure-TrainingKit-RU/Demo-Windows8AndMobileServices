@@ -198,7 +198,21 @@ In demo, you add push notifications, using the Windows Push Notification service
 
 	````C#
 	var ch = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
-	await MobileService.GetTable<Channel>().InsertAsync(new Channel() { Uri = ch.Uri });
+	var channelDTO = new Channel()
+				  {
+						Id = ApplicationData.Current.LocalSettings.Values["ChannelId"] as int?,
+						Uri = ch.Uri
+				  };
+
+	if (ApplicationData.Current.LocalSettings.Values["ChannelId"] == null)
+	{
+		 await MobileService.GetTable<Channel>().InsertAsync(channelDTO);
+		 ApplicationData.Current.LocalSettings.Values["ChannelId"] = channelDTO.Id;
+	}
+	else
+	{
+		 await MobileService.GetTable<Channel>().UpdateAsync(channelDTO);
+	}
 	````
 
 	> **Note:** You can install and use the code snippet _wamschannelrequest_ located in /Source/Assets/ClientSnippets to perform this task
@@ -225,28 +239,7 @@ This is the minimum requirement for a table in Mobile Services.
 
 	**Speaking Point:** When dynamic schema is enabled on your mobile service, new columns are created automatically when JSON objects are sent to the mobile service by an insert or update operation.
 
-1. Click the script tab and select the **Insert** Operation
-
-1. Replace the existing script with the following script.  
-
-	**Speaking Point:** The purpose of this script is to ensure that multiple channels with the same Uri are not submitted every time the OnLaunched handler executes in the sample application. This code is sufficient for a demo scenario but in a real application you would use an Id rather then matching on uri: item.Uri to identify the channel to be replaced.  The reasoning is Channels expire and will be replaced by a new unique Channel Uri.
-
-	````JavaScript
-	function insert(item, user, request) { 
-		var channelTable = tables.getTable('Channel'); 
-		channelTable.where({ uri: item.Uri }) 
-			.read({ success: insertChannelIfNotFound});     
-
-		function insertChannelIfNotFound(existingChannels) { 
-			if(existingChannels.length > 0) { 
-					request.respond(200, existingChannels[0]); 
-			} else { 
-					request.execute(); 
-			} 
-		} 
-	}
-	````
-1. Click **Save** in the bottom toolbar Now in the left navbar select the **TodoItem** table 
+1. Select the **TodoItem** table 
 
 1. Click the **Script** tab and select the **Insert** Operation and replace the existing script with the following and walk through the following code
 
@@ -285,7 +278,10 @@ This is the minimum requirement for a table in Mobile Services.
 	  }        
  });    
 }
+
 	````
+**Note:** This script is located in the _/Source/Assets/ServerSnippets_ folder
+
 **Speaking Point:** This script executes as a each time a the insert operation is executed on the Todoitem table.  The sendNotifications method we select all channels from the Channels table and iterate through them sending a push notification to each channel uri.  While we have only demonstrated toast the push.wns.* namespace provides simple to use methods required for sending toast, tile and badge updates. As you can see in this scenario we are sending a ToastText04 template which requires three lines of text.  When you build your applications we would advise that you do not send toast notifications so frequently but rather only at times when there is a critical or important message to deliver the user of your application.
 
 Next we will move on to look at how you can secure your Mobile Service endpoints using Live Connect
@@ -330,56 +326,42 @@ Next, you will update the app to authenticate users with Live Connect before req
 
 <a name="Add-authentication" />
 ### Add authentication ###
-	
-1. Download and install the [Live SDK for Windows](http://go.microsoft.com/fwlink/?LinkId=262253&clcid=0x409)
 
-1. In the project in Visual Studio, add a reference to the Live SDK.
+1. Navigate to the Identity Tab and select which identity provider you would like to use.
 
-1. Open the project file mainpage.xaml.cs and add the following using statements
+> **Note:** In this example we will use Microsoft Account.  If you wish to demonstrat Choose a supported identity provider from the list below and follow the steps to register your app with that provider:
+[Microsoft Account](http://www.windowsazure.com/en-us/develop/mobile/how-to-guides/register-for-microsoft-authentication/),
+[Facebook login](http://www.windowsazure.com/en-us/develop/mobile/how-to-guides/register-for-facebook-authentication/), 
+[Twitter login](http://www.windowsazure.com/en-us/develop/mobile/how-to-guides/register-for-twitter-authentication/),
+[Google login](http://www.windowsazure.com/en-us/develop/mobile/how-to-guides/register-for-google-authentication/)
 
-	````C#
-	using Microsoft.Live;
-	````
+1. Navigate to the [My Applications](http://go.microsoft.com/fwlink/p/?LinkId=262039&clcid=0x409) page in the Live Connect Developer Center, and log on with your Microsoft account, if required.
 
-1. Add the following code snippet that creates a member variable for storing the current Live Connect session and a method to handle the authentication process:
+1. Click **Create application**, then type an **Application name** and click **I accept**. This registers the application with Live Connect.
 
+1. Click A**pplication settings page**, then **API Settings** and make a note of the values of the **Client ID** and **Client secret**.
 
-	````C#
-private LiveConnectSession session;
-private async System.Threading.Tasks.Task Authenticate()
-{
-		LiveAuthClient liveIdClient = new LiveAuthClient("<<TODO Redirect URL here>>");
+1. In **Redirect domain**, enter the URL of your mobile service, and then click Save.
 
-		while (session == null)
-		{
-			// Force a logout to make it easier to test with multiple Microsoft Accounts 
-			if (liveIdClient.CanLogout)
-				liveIdClient.Logout();
+> **Note:** You are now ready to use a Microsoft Account for authentication in your app by providing the client ID and client secret values to Mobile Services.
 
-			LiveLoginResult result = await liveIdClient.LoginAsync(new[] { "wl.basic" });
-			if (result.Status == LiveConnectSessionStatus.Connected)
-			{
-				session = result.Session;
-				MobileServiceUser loginResult = await App.MobileService.LoginAsync(session.AuthenticationToken);
-			}               
-		}
+1. Back in the Management Portal, click the **Identity** tab, enter the app identifier and shared secret values obtained from your identity provider, and click **Save**.
+
+1. Now that your Authentication provider is now configured lets wire up the application. Return to Visual Studio and select **MainPage.xaml.cs**
+
+1. Locate the **OnNavigatedTo** and the existing **OnNavigatedTo** method override with the following method that calls the new **Authenticate** method:
+
+````C#
+protected override async void OnNavigatedTo(NavigationEventArgs e) 
+{ 
+	await App.MobileService.LoginAsync(MobileServiceAuthenticationProvider.MicrosoftAccount);
+	RefreshTodoItems();
 }
-	````
-	> **Note:** You can install and use the code snippet _wamsauthenticate_ located in /Source/Assets/ClientSnippets to perform this task
 
+````
 
-1. Update string _<< INSERT REDIRECT DOMAIN HERE >>_ from the previous step with the redirect domain that was specified when setting up the app in Live Connect, in the format **https://****service-name****.azure-mobile.net/**.
+> **Note:** Both your mobile service and your app are now configured to work with your chosen authentication provider.
 
-1. Update the **OnNavigatedTo** event handler to be async and add a call to the **Authenticate** method:
-	<!-- mark:1,3 -->
-	````C#
-	protected async override void OnNavigatedTo(NavigationEventArgs e)
-	{
-		await Authenticate();
-		RefreshTodoItems();            
-	}
-	````
+1. Press the F5 key to run the app and sign into the app with your chosen identity provider.
 
-1. Press the F5 key to run the app and sign into Live Connect with your Microsoft Account.
-
-When you are successfully logged-in, the app should run without errors, and you should be able to query Mobile Services and make updates to data.
+> **Note:** When you are successfully logged-in, the app should run without errors, and you should be able to query Mobile Services and make updates to data.

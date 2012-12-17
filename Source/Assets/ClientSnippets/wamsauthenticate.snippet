@@ -15,26 +15,7 @@
     </Header>
     <Snippet>
       <Code Language="csharp"><![CDATA[//TODO:update OnNavigatedTo to be an async method then add call to await Authenticate();
-        private LiveConnectSession session;
-
-        private async System.Threading.Tasks.Task Authenticate()
-        {
-            LiveAuthClient liveIdClient = new LiveAuthClient("<<TODO Redirect URL here>>");
-
-            while (session == null)
-            {
-                // Force a logout to make it easier to test with multiple Microsoft Accounts 
-                if (liveIdClient.CanLogout)
-                    liveIdClient.Logout();
-
-                LiveLoginResult result = await liveIdClient.LoginAsync(new[] { "wl.basic" });
-                if (result.Status == LiveConnectSessionStatus.Connected)
-                {
-                    session = result.Session;
-                    MobileServiceUser loginResult = await App.MobileService.LoginAsync(session.AuthenticationToken);
-                }
-            }
-        }]]></Code>
+	await App.MobileService.LoginAsync(MobileServiceAuthenticationProvider.MicrosoftAccount);]]></Code>
     </Snippet>
   </CodeSnippet>
 </CodeSnippets>

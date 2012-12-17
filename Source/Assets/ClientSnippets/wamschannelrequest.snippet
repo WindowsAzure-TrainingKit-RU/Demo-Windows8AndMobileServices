@@ -15,7 +15,23 @@
     </Header>
     <Snippet>
       <Code Language="csharp"><![CDATA[            var ch = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
-	await MobileService.GetTable<Channel>().InsertAsync(new Channel() { Uri = ch.Uri });]]></Code>
+            var channelDTO = new Channel()
+                                {
+                                    Id = ApplicationData.Current.LocalSettings.Values["ChannelId"] as int?,
+                                    Uri = ch.Uri,
+                                    Expiry = new DateTime(ch.ExpirationTime.ToUniversalTime().Ticks)
+                                };
+
+            if (ApplicationData.Current.LocalSettings.Values["ChannelId"] == null)
+            {
+                await MobileService.GetTable<Channel>().InsertAsync(channelDTO);
+                ApplicationData.Current.LocalSettings.Values["ChannelId"] = channelDTO.Id;
+            }
+            else
+            {
+                await MobileService.GetTable<Channel>().UpdateAsync(channelDTO);
+            }
+]]></Code>
     </Snippet>
   </CodeSnippet>
 </CodeSnippets>
