@@ -175,7 +175,7 @@ In demo, you add push notifications, using the Windows Push Notification service
 	````C#
 	public class Channel
 	{
-		public int Id { get; set; }
+		public int? Id { get; set; }
 		public string Uri { get; set; }
 	}
 
@@ -194,7 +194,7 @@ In demo, you add push notifications, using the Windows Push Notification service
 	protected async override void OnLaunched(LaunchActivatedEventArgs args)
 	````
 
-1. Add the following two lines of code to request a notification channel and register it with your Mobile Services app
+1. Add the following lines of code to request a notification channel and register it with your Mobile Services app
 
 	````C#
 	var ch = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
