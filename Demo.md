@@ -4,7 +4,7 @@
 ---
 <a name="Overview" />
 ## Overview ##
-This demo script demonstrates how you can leverage Visual Studio 2012 and Windows Azure Mobile Services to add structured storage, push notifications and integrated authentication to your Windows Store application.
+This demo script demonstrates how you can leverage Visual Studio 2012 and Windows Azure Mobile Services to add structured storage, push notifications, integrated authentication and scheduled jobs to your Windows Store application.
 
 > **Note:** This is a demo script that can be used as a guide for demos when presenting on Windows Azure Mobile Services.  If you are looking for a Hands on Lab with step by step screenshots please refer to the HOL section of the Windows Azure Training Kit.
 
@@ -352,3 +352,75 @@ protected override async void OnNavigatedTo(NavigationEventArgs e)
 1. Press the F5 key to run the app and sign into the app with your chosen identity provider.
 
 > **Note:** When you are successfully logged-in, the app will run without errors, and you will be able to query Mobile Services and make updates to data.
+
+<a name="Exercise4" />
+## Exercise 4: Adding a Scheduled Job to your Mobile Service ##
+
+In this demo you learn how to execute script on a scheduled basis using **Windows Azure Mobile Services**.  In this scenario we will configure the scheduler to poll Twitter every 15 minutes and then send a Tile update with the latest tweets.
+
+
+### Task 1 - Configure your Windows store app for Wide Tiles ###
+1. In Visual Studio Open your **package.appxmanifest**
+
+1. Select the Application UI tab
+
+1. Provide a Wide Tile Logo of 310x150 pixels.  
+
+> **Note:** Note if you do not have an image of these dimensions available you can use Microsoft Paint to quickly create one
+
+
+### Task 2 - Configure the Mobile Services scheduler ###
+
+1. Create the scheduler job that will send push notifications to registered clients every 15 minutes with the latest Twitter updates for a particular twitter handle.
+
+1. Specify a name for the job and make sure the schedule frequency is set to **every 15 minutes**. Click the check mark to create the job.
+
+1. Select the created job from the job list.
+
+1. Select the **Script** tab and paste the code snippet below that both polls Twitter and then composes a push notification to update your start screens tile using push.wns.*
+ 
+	````JavaScript
+	function CheckFeed() {
+		 getUpdatesAndNotify();
+	}
+
+	var request = require('request');
+	function getUpdatesAndNotify() {  
+		 request('http://search.twitter.com/search.json?q=@cloudnick&rpp=2', 
+			  function tweetsLoaded (error, response, body) {
+				  var results = JSON.parse(body).results;
+				  if(results){
+						results.forEach(function visitResult(tweet){
+						 sendNotifications(tweet);
+						});
+				  }            
+			  });
+	}
+
+	function sendNotifications(tweet){    
+			  
+		 var channelTable = tables.getTable('Channel');
+		  channelTable.read({
+				success: function(channels) {
+					 channels.forEach(function(channel) {   
+																							
+						  push.wns.sendTileWideSmallImageAndText04(channel.uri, {
+								image1src: tweet.profile_image_url,                            
+								text1: '@' + tweet.from_user,
+								text2: tweet.text
+						  });                  
+																																	 
+					 });
+				}
+			 });
+	}
+	````
+1. Once you paste the script into the editor, click the **Save** button to store the changes to the script
+ 
+1. In Visual Studio, press **F5** to build and run the application.  This will ensure your channel URI is up to date and will ensure the Default Wide tile is now on your Start screen
+
+1. Go back to the Windows Azure Management Portal, select the **Scheduler** tab of your mobile service, and then click **Enable** in the command bar to allow the job to run.
+
+1. To test your script immediately rather than wait 15 minutes for it to be scheduled, click **Run Once** in the command bar.
+
+1. Return to the start screen and see the latest update on your application tile
