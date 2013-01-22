@@ -404,7 +404,7 @@ In this demo you learn how to execute script on a scheduled basis using **Window
 				success: function(channels) {
 					 channels.forEach(function(channel) {   
 																							
-						  push.wns.sendTileWideSmallImageAndText04(channel.uri, {
+						  push.wns.sendTileWideSmallImageAndText04(channel.Uri, {
 								image1src: tweet.profile_image_url,                            
 								text1: '@' + tweet.from_user,
 								text2: tweet.text
