@@ -1,4 +1,4 @@
-﻿# Getting Started with Windows Azure Mobile Services #
+﻿# Getting Started with Windows Azure Mobile Services for Windows 8#
 
 ## Demo ##
 
@@ -7,6 +7,9 @@
 Demos are sets of step-by-step guides that are designed to help you learn how to use key Windows Azure services and features. Each demo provides instructions to guide you through the process of developing a complete application.
 
 In this demo you will see how how you can leverage Visual Studio 2012 and Windows Azure Mobile Services to add structured storage, push notifications and integrated authentication to your Windows Store application.
+
+You can find the [FULL step-by-step DEMO.md script here ](https://github.com/WindowsAzure-TrainingKit/Demo-WindowsPhoneAndMobileServices/blob/master/Demo.md)
+
 
 > **Note:** You can download the latest build of the Windows Azure Training Kit which includes a tested version of this Demo from here: http://bit.ly/WindowsAzureTK.
 
