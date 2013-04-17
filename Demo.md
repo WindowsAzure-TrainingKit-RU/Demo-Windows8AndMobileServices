@@ -110,7 +110,7 @@ In this step we explore _To do list_ application code and see how simple the Win
 1. Open **MainPage.xaml.cs** to see how the mobile service client is then used for Inserts, Updates, Reads and **show** the following:
 
 	- Creating a handle for operations on a table
-
+		<!-- mark:3;-->
 		````C#
 		private IMobileServiceTable<TodoItem> todoTable = App.MobileService.GetTable<TodoItem>();
 		
@@ -231,7 +231,7 @@ Now that we have the client wired up to request a channel and write it to our Mo
 
 In this section we add a Channel table and server side scripts to send push notifications everytime someone inserts into our todolist.  
 
-	> **Speaking Point:** from a demo perspective and in ensuring it keeps the duration of the presentation within an 1 I would suggest for the demo you keep the server scripts somewhere that you can copy and paste them in, then walk through what they are doing as opposed to typing them out.
+> **Speaking Point:** from a demo perspective and in ensuring it keeps the duration of the presentation within an 1 I would suggest for the demo you keep the server scripts somewhere that you can copy and paste them in, then walk through what they are doing as opposed to typing them out.
 
 1. Log on to the [Windows Azure Management Portal](https://manage.windowsazure.com/), click **Mobile Services**, and then click your app.
 
