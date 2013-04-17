@@ -108,8 +108,7 @@ In this step we explore _To do list_ application code and see how simple the Win
 	````
 
 1. Open **MainPage.xaml.cs** to see how the mobile service client is then used for Inserts, Updates, Reads and **show** the following:
-
-	- Creating a handle for operations on a table
+	* Creating a handle for operations on a table
 		<!-- mark:3;-->
 		````C#
 		private IMobileServiceTable<TodoItem> todoTable = App.MobileService.GetTable<TodoItem>();
