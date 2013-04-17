@@ -65,10 +65,9 @@ Once you have created your mobile service, you can follow an easy quick start in
 1. Select **Create a new Windows 8 application** and perform the three steps provided
 	- For the **Get the tools** step Install the Mobile Services SDK if you have not done so already.  The Mobile Services SDK provides a client side API that can be used within your Visual C++, XAML/C#/VB and HTML/JS Windows Store apps.
 	- Click **Create Todoitem table**.  This will create a table for the starter project.  
-
 	- In the Download and run your app step select your desired app language, in this case **C#**, and click **Download**.
 
-This downloads the project for the sample _To do list_ application that is connected to your mobile service. Save the compressed project file to your local computer, and make a note of where you save it.
+	> **Note:** This downloads the project for the sample _To do list_ application that is connected to your mobile service. Save the compressed project file to your local computer, and make a note of where you save it.
 
 	> **Speaking Point:** You can add additional tables manually by clicking the "Data" tab and using the Create button within.  We will revisit adding tables through the Data tab further on in the Push Notification demo. 
 
