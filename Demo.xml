@@ -9,7 +9,7 @@
   <Description>This demo script demonstrates how you can leverage Visual Studio 2012 and Windows Azure Mobile Services to add structured storage, push notifications and integrated authentication to your Windows Store application.</Description>
   <Document ConversionType="Html">Demo.md</Document>
   <Title>Getting Started with Windows Azure Mobile Services</Title>
-  <Version>1.0.1</Version>
+  <Version>1.0.2</Version>
   <Source>.\Source</Source>
   <DependencyChecker></DependencyChecker>
   <CustomProperties>
